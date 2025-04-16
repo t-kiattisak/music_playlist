@@ -19,6 +19,13 @@ code {
 }
 
 :root {
+  --spotify-base: #121212;
+  --spotify-dark: #1f1f1f;
+  --spotify-muted-light: #BCB9BE;
+  --spotify-gray-mid: #ffffff1a;
+  --spotify-gray-soft: #848484;
+  --spotify-purple: #846C8C;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -55,6 +62,13 @@ code {
 }
 
 .dark {
+  --spotify-base: #121212;
+  --spotify-dark: #1E1E1E;
+  --spotify-muted-light: #BCB9BE;
+  --spotify-gray-mid: #555555;
+  --spotify-gray-soft: #848484;
+  --spotify-purple: #846C8C;
+
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.141 0.005 285.823);
@@ -90,6 +104,13 @@ code {
 }
 
 @theme inline {
+  --color-spotify-base: var(--spotify-base);
+  --color-spotify-dark: var(--spotify-dark);
+  --color-spotify-muted-light: var(--spotify-muted-light);
+  --color-spotify-gray-mid: var(--spotify-gray-mid);
+  --color-spotify-gray-soft: var(--spotify-gray-soft);
+  --color-spotify-purple: var(--spotify-purple);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -133,6 +154,6 @@ code {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
   }
 }
