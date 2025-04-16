@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table"
 import type { Tracks } from "@/domain/playlist/getPaylistById"
 import {
+  useDeleteTracks,
   useGetPlaylistById,
   useGetPlaylists,
 } from "@/hooks/queries/usePlaylists"
@@ -49,6 +50,8 @@ function RouteComponent() {
   const { play, isPlaying, stop, currentTrack } = useAudioPlayer<Tracks>()
   const playlists = useGetPlaylists()
 
+  const deleteTracks = useDeleteTracks()
+
   if (isLoading) {
     return <div>...loading</div>
   }
@@ -65,7 +68,6 @@ function RouteComponent() {
       <div className='bg-linear-to-t from-spotify-gray-mid/50 to-spotify-gray-mid p-2'>
         <div className='flex gap-4 items-end pt-4'>
           <div className='w-32 h-32 rounded bg-spotify-gray-mid flex items-center justify-center text-4xl text-white'>
-            {/* แสดงรายการที่เลือกจะเล่น */}
             <Music />
           </div>
           <Dialog>
@@ -176,7 +178,21 @@ function RouteComponent() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className='w-56 border-0'>
                           <DropdownMenuGroup>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                deleteTracks.mutate(
+                                  {
+                                    playlistId: track.playlistId,
+                                    trackId: track.trackId,
+                                  },
+                                  {
+                                    onSuccess: () => {
+                                      refetch()
+                                    },
+                                  }
+                                )
+                              }
+                            >
                               <Trash />
                               Remove from this playlist
                             </DropdownMenuItem>

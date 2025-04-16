@@ -1,6 +1,7 @@
 import {
   createNewPlaylist,
   deletePlaylistId,
+  deleteTracks,
   getPlaylistById,
   getPlaylists,
 } from "@/services/playlists"
@@ -23,3 +24,5 @@ export const useCreateNewPlaylist = () =>
 
 export const useDeletePlaylistById = () =>
   useMutation({ mutationFn: deletePlaylistId })
+
+export const useDeleteTracks = () => useMutation({ mutationFn: deleteTracks })

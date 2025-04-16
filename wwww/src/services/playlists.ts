@@ -25,3 +25,14 @@ export const deletePlaylistId = async (playlistId: string) => {
   const { data } = await network.delete(`/playlists/${playlistId}`)
   return data
 }
+
+export const deleteTracks = async ({
+  playlistId,
+  trackId,
+}: {
+  playlistId: string
+  trackId: string
+}) => {
+  const { data } = await network.delete(`/playlists/${playlistId}/${trackId}`)
+  return data
+}
