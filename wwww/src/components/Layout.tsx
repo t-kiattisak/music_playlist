@@ -45,7 +45,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const deletePlaylist = useDeletePlaylistById()
   return (
     <div className='bg-black'>
-      <div className='h-16 flex items-center p-2 fixed top-0 left-0 right-0 bg-black'>
+      <div className='h-16 flex items-center p-2 fixed top-0 left-0 right-0 bg-black z-50'>
         <div className='flex-1 flex items-center space-x-2'>
           <svg
             role='img'

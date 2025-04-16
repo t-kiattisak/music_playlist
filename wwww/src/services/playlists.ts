@@ -36,3 +36,16 @@ export const deleteTracks = async ({
   const { data } = await network.delete(`/playlists/${playlistId}/${trackId}`)
   return data
 }
+
+export const addTrackToPlaylist = async ({
+  playlistId,
+  trackId,
+}: {
+  playlistId: string
+  trackId: string
+}) => {
+  const { data } = await network.post(`/playlists/${playlistId}/add`, {
+    trackId,
+  })
+  return data
+}

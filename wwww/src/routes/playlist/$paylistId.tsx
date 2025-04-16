@@ -1,4 +1,5 @@
 import { EditDetails } from "@/components/edit-details"
+import { SearchPlaylist } from "@/components/search-playlist"
 import {
   Dialog,
   DialogContent,
@@ -207,6 +208,8 @@ function RouteComponent() {
           </Table>
         </div>
       )}
+
+      <SearchPlaylist playlistId={paylistId} />
     </div>
   )
 }

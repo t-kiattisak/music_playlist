@@ -1,4 +1,5 @@
 import {
+  addTrackToPlaylist,
   createNewPlaylist,
   deletePlaylistId,
   deleteTracks,
@@ -15,6 +16,7 @@ export const useGetPlaylists = () =>
 
 export const useGetPlaylistById = (paylistId: string) =>
   useQuery({
+    staleTime: 1000,
     queryKey: ["get-playlist-by-id", paylistId],
     queryFn: ({ queryKey }) => getPlaylistById(queryKey[1]),
   })
@@ -26,3 +28,6 @@ export const useDeletePlaylistById = () =>
   useMutation({ mutationFn: deletePlaylistId })
 
 export const useDeleteTracks = () => useMutation({ mutationFn: deleteTracks })
+
+export const useAddTrackToPlaylist = () =>
+  useMutation({ mutationFn: addTrackToPlaylist })
