@@ -1,0 +1,60 @@
+import { prisma } from "../infrastructure/prisma"
+
+// สร้าง playlist ให้ user
+export const createPlaylist = async (userId: string, name: string) => {
+  return prisma.playlist.create({
+    data: {
+      name,
+      userId,
+    },
+  })
+}
+
+// ดึง playlist แบบรวมเพลง (tracks)
+export const getPlaylistById = async (playlistId: string) => {
+  return prisma.playlist.findUnique({
+    where: { id: playlistId },
+    include: {
+      tracks: {
+        include: {
+          track: true,
+        },
+      },
+    },
+  })
+}
+
+// ดึง playlist ทั้งหมดของ user
+export const getPlaylistsByUserId = async (userId: string) => {
+  return prisma.playlist.findMany({
+    where: { userId },
+  })
+}
+
+// เพิ่มเพลงเข้า playlist
+export const addTrackToPlaylist = async (
+  playlistId: string,
+  trackId: string
+) => {
+  return prisma.playlistTrack.create({
+    data: {
+      playlistId,
+      trackId,
+    },
+  })
+}
+
+// ลบเพลงออกจาก playlist
+export const removeTrackFromPlaylist = async (
+  playlistId: string,
+  trackId: string
+) => {
+  return prisma.playlistTrack.delete({
+    where: {
+      playlistId_trackId: {
+        playlistId,
+        trackId,
+      },
+    },
+  })
+}
