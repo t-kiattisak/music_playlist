@@ -4,6 +4,8 @@ import { createPlaylistHandler } from "../services/playlist/createPlaylist"
 import { getPlaylistByIdHandler } from "../services/playlist/getPlayListById"
 import { getPlayListsByUserHandler } from "../services/playlist/getPlayListByUser"
 import { deletePlaylistHandler } from "../services/playlist/deletePlaylist"
+import { addTrackToPlaylistHandler } from "../services/playlist/addTrackToPlaylist"
+import { removeTrackFromPlaylistHandler } from "../services/playlist/removeTrackFromPlaylist"
 
 const playlistRoute = new Hono<{ Variables: { userId: string } }>()
 
@@ -42,6 +44,31 @@ playlistRoute.delete("/:id", async (c) => {
   const id = c.req.param("id")
   return await Effect.runPromise(
     Effect.matchEffect(deletePlaylistHandler(id), {
+      onSuccess: (data) => Effect.succeed(c.json({ data })),
+      onFailure: (err) => Effect.succeed(c.json({ error: err.message }, 400)),
+    })
+  )
+})
+
+playlistRoute.post("/:id/add", async (c) => {
+  const playlistId = c.req.param("id")
+  const body = await c.req.json()
+  const input = { playlistId, trackId: body.trackId }
+
+  return await Effect.runPromise(
+    Effect.matchEffect(addTrackToPlaylistHandler(input), {
+      onSuccess: (data) => Effect.succeed(c.json({ data })),
+      onFailure: (err) => Effect.succeed(c.json({ error: err.message }, 400)),
+    })
+  )
+})
+
+playlistRoute.delete("/:id/:trackId", async (c) => {
+  const playlistId = c.req.param("id")
+  const trackId = c.req.param("trackId")
+
+  return await Effect.runPromise(
+    Effect.matchEffect(removeTrackFromPlaylistHandler(playlistId, trackId), {
       onSuccess: (data) => Effect.succeed(c.json({ data })),
       onFailure: (err) => Effect.succeed(c.json({ error: err.message }, 400)),
     })
