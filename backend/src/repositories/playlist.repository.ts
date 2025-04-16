@@ -32,6 +32,7 @@ export const getPlaylistById = async (playlistId: string) => {
           track: true,
           playlist: true,
         },
+        orderBy: { track: { id: "desc" } },
       },
     },
   })
@@ -42,6 +43,7 @@ export const getPlaylistsByUserId = async (userId: string) => {
   return prisma.playlist.findMany({
     where: { userId },
     include: { user: { select: { name: true } } },
+    orderBy: { id: "asc" },
   })
 }
 

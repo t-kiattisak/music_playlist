@@ -38,11 +38,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
+import { useToggle } from "@/hooks/useToggle"
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { paylistId } = useParams({ strict: false })
   const { data, refetch } = useGetPlaylists()
   const deletePlaylist = useDeletePlaylistById()
+  const [openDetail, _, setOpenDetail] = useToggle()
+
   return (
     <div className='bg-black'>
       <div className='h-16 flex items-center p-2 fixed top-0 left-0 right-0 bg-black z-50'>
@@ -123,7 +126,10 @@ const Layout = ({ children }: PropsWithChildren) => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className='w-56 shadow-black/40 shadow-lg'>
                         <DropdownMenuGroup>
-                          <Dialog>
+                          <Dialog
+                            open={openDetail}
+                            onOpenChange={setOpenDetail}
+                          >
                             <DialogTrigger asChild>
                               <DropdownMenuItem
                                 onSelect={(e) => e.preventDefault()}
@@ -144,7 +150,10 @@ const Layout = ({ children }: PropsWithChildren) => {
                                   name: name,
                                   description: description,
                                 }}
-                                edited={() => refetch()}
+                                edited={() => {
+                                  setOpenDetail(false)
+                                  refetch()
+                                }}
                               />
                             </DialogContent>
                           </Dialog>
