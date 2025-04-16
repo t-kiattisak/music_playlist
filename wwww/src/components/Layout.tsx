@@ -7,8 +7,12 @@ import { PlaylistCard } from "./playlist-card"
 
 import { DropdownCreate } from "./dropdown-create"
 import { ScrollArea } from "./ui/scroll-area"
+import { useGetPlaylists } from "@/hooks/queries/usePlaylists"
+import { Link, useParams } from "@tanstack/react-router"
 
 const Layout = ({ children }: PropsWithChildren) => {
+  const { paylistId } = useParams({ strict: false })
+  const { data } = useGetPlaylists()
   return (
     <div className='bg-black'>
       <div className='h-16 flex items-center p-2 fixed top-0 left-0 right-0 bg-black'>
@@ -72,15 +76,19 @@ const Layout = ({ children }: PropsWithChildren) => {
           </div>
           <ScrollArea className='mt-2 overflow-y-auto flex-1'>
             <div className='space-y-1'>
-              {Array(100)
-                .fill(0)
-                .map((_, i) => (
+              {data?.data.map(({ id, name }, index) => (
+                <Link
+                  key={index}
+                  to='/playlist/$paylistId'
+                  params={{ paylistId: id }}
+                >
                   <PlaylistCard
-                    key={i}
-                    name={`Playlist #${i + 1}`}
+                    isActive={paylistId === id}
+                    name={name}
                     owner={"kiattisak"}
                   />
-                ))}
+                </Link>
+              ))}
             </div>
           </ScrollArea>
         </div>

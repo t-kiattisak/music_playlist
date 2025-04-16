@@ -24,6 +24,7 @@ code {
   --spotify-muted-light: #BCB9BE;
   --spotify-gray-mid: #ffffff1a;
   --spotify-gray-soft: #848484;
+  --spotify-gray-base: #282828;
   --spotify-purple: #846C8C;
 
   --background: oklch(1 0 0);
@@ -67,6 +68,7 @@ code {
   --spotify-muted-light: #BCB9BE;
   --spotify-gray-mid: #555555;
   --spotify-gray-soft: #848484;
+  --spotify-gray-base: #282828;
   --spotify-purple: #846C8C;
 
   --background: oklch(0.141 0.005 285.823);
@@ -109,6 +111,7 @@ code {
   --color-spotify-muted-light: var(--spotify-muted-light);
   --color-spotify-gray-mid: var(--spotify-gray-mid);
   --color-spotify-gray-soft: var(--spotify-gray-soft);
+  --color-spotify-gray-base: var(--spotify-gray-base);
   --color-spotify-purple: var(--spotify-purple);
 
   --color-background: var(--background);

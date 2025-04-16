@@ -15,9 +15,11 @@ export const getPlaylistById = async (playlistId: string) => {
   return prisma.playlist.findUnique({
     where: { id: playlistId },
     include: {
+      user: true,
       tracks: {
         include: {
           track: true,
+          playlist: true,
         },
       },
     },
