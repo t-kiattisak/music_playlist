@@ -10,6 +10,14 @@ export const createPlaylist = async (userId: string, name: string) => {
   })
 }
 
+// อัพเดท playlist ให้ user
+export const updatePlaylist = async (playlistId: string, name: string) => {
+  return prisma.playlist.update({
+    where: { id: playlistId },
+    data: { name },
+  })
+}
+
 // ดึง playlist แบบรวมเพลง (tracks)
 export const getPlaylistById = async (playlistId: string) => {
   return prisma.playlist.findUnique({
@@ -30,6 +38,7 @@ export const getPlaylistById = async (playlistId: string) => {
 export const getPlaylistsByUserId = async (userId: string) => {
   return prisma.playlist.findMany({
     where: { userId },
+    include: { user: { select: { name: true } } },
   })
 }
 

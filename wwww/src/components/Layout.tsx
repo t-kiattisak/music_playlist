@@ -1,18 +1,48 @@
 import type { PropsWithChildren } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { Bell, SearchIcon } from "lucide-react"
+import { Bell, CircleMinus, Ellipsis, PenIcon, SearchIcon } from "lucide-react"
 import { Avatar } from "./ui/avatar"
 import { PlaylistCard } from "./playlist-card"
 
 import { DropdownCreate } from "./dropdown-create"
 import { ScrollArea } from "./ui/scroll-area"
-import { useGetPlaylists } from "@/hooks/queries/usePlaylists"
+import {
+  useDeletePlaylistById,
+  useGetPlaylists,
+} from "@/hooks/queries/usePlaylists"
 import { Link, useParams } from "@tanstack/react-router"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog"
+import { EditDetails } from "./edit-details"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog"
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { paylistId } = useParams({ strict: false })
-  const { data } = useGetPlaylists()
+  const { data, refetch } = useGetPlaylists()
+  const deletePlaylist = useDeletePlaylistById()
   return (
     <div className='bg-black'>
       <div className='h-16 flex items-center p-2 fixed top-0 left-0 right-0 bg-black'>
@@ -72,11 +102,11 @@ const Layout = ({ children }: PropsWithChildren) => {
         <div className='bg-spotify-base flex flex-col h-full rounded-md text-white p-2 m-2'>
           <div className='flex space-x-2 justify-between shrink-0'>
             <p className='text-white text-[16px]'>Your Library</p>
-            <DropdownCreate />
+            <DropdownCreate nextPlaylist={(data?.data.length ?? 0) + 1} />
           </div>
           <ScrollArea className='mt-2 overflow-y-auto flex-1'>
-            <div className='space-y-1'>
-              {data?.data.map(({ id, name }, index) => (
+            <div className='space-y-1 flex flex-col'>
+              {data?.data.map(({ id, name, user }, index) => (
                 <Link
                   key={index}
                   to='/playlist/$paylistId'
@@ -85,8 +115,76 @@ const Layout = ({ children }: PropsWithChildren) => {
                   <PlaylistCard
                     isActive={paylistId === id}
                     name={name}
-                    owner={"kiattisak"}
-                  />
+                    owner={user.name}
+                  >
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Ellipsis className='text-white ml-auto' />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className='w-56 shadow-black/40 shadow-lg'>
+                        <DropdownMenuGroup>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                              >
+                                <PenIcon />
+                                Edit
+                              </DropdownMenuItem>
+                            </DialogTrigger>
+                            <DialogContent className='sm:max-w-[425px]'>
+                              <DialogHeader>
+                                <DialogTitle className='text-white'>
+                                  Edit details
+                                </DialogTitle>
+                              </DialogHeader>
+                              <EditDetails
+                                defaultValues={{ name: name, description: "" }}
+                                edited={() => refetch()}
+                              />
+                            </DialogContent>
+                          </Dialog>
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem
+                                disabled={deletePlaylist.isPending}
+                                onSelect={(e) => e.preventDefault()}
+                              >
+                                <CircleMinus />
+                                Delete
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete from Your Library?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This will delete {name} from Your Library.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={async () => {
+                                    await deletePlaylist.mutateAsync(id, {
+                                      onSuccess: () => {
+                                        refetch()
+                                      },
+                                    })
+                                  }}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </PlaylistCard>
                 </Link>
               ))}
             </div>

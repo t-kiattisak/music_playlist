@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "./ui/card"
 import { Music } from "lucide-react"
+import type { PropsWithChildren } from "react"
 
 type PlaylistCardProps = {
   name: string
@@ -8,7 +9,12 @@ type PlaylistCardProps = {
   isActive?: boolean
 }
 
-export const PlaylistCard = ({ name, owner, isActive }: PlaylistCardProps) => {
+export const PlaylistCard = ({
+  name,
+  owner,
+  isActive,
+  children,
+}: PropsWithChildren<PlaylistCardProps>) => {
   return (
     <Card
       className={cn(
@@ -22,13 +28,16 @@ export const PlaylistCard = ({ name, owner, isActive }: PlaylistCardProps) => {
         <Music className='text-white size-6' />
       </div>
 
-      <CardContent className='p-0 flex flex-col'>
-        <div className='text-sm font-semibold text-white leading-tight'>
-          {name}
+      <CardContent className='p-0 flex gap-2 w-full items-center'>
+        <div className='flex flex-col'>
+          <div className='text-sm font-semibold text-white leading-tight'>
+            {name}
+          </div>
+          <div className='text-xs text-[var(--spotify-muted-light)]'>
+            Playlist • {owner}
+          </div>
         </div>
-        <div className='text-xs text-[var(--spotify-muted-light)]'>
-          Playlist • {owner}
-        </div>
+        {children}
       </CardContent>
     </Card>
   )

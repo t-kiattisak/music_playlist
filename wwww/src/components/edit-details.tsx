@@ -18,11 +18,23 @@ const formDetails = z.object({
   description: z.string().min(2).max(50),
 })
 
-export const EditDetails = () => {
+interface EditDetailsProps {
+  edited?: VoidFunction
+  defaultValues?: z.infer<typeof formDetails>
+}
+export const EditDetails = ({ edited, defaultValues }: EditDetailsProps) => {
   const form = useForm({
     resolver: zodResolver(formDetails),
+    defaultValues: defaultValues ?? {
+      description: "",
+      name: "",
+    },
   })
-  const onSubmit = () => {}
+
+  const onSubmit = () => {
+    edited?.()
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
@@ -60,7 +72,7 @@ export const EditDetails = () => {
           )}
         />
         <div className='flex justify-end'>
-          <Button type='submit'>Save</Button>
+          <Button onClick={form.handleSubmit(onSubmit)}>Save</Button>
         </div>
       </form>
     </Form>

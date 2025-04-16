@@ -10,14 +10,33 @@ import {
 } from "./ui/dropdown-menu"
 import { Avatar } from "./ui/avatar"
 import { useNavigate } from "@tanstack/react-router"
+import {
+  useCreateNewPlaylist,
+  useGetPlaylists,
+} from "@/hooks/queries/usePlaylists"
 
-export const DropdownCreate = () => {
+export const DropdownCreate = ({ nextPlaylist }: { nextPlaylist: number }) => {
   const navigation = useNavigate()
+  const { mutate, isPending } = useCreateNewPlaylist()
+  const { refetch } = useGetPlaylists()
+
   const createPlaylist = () => {
-    // Logic to create a playlist
-    console.log("Playlist created")
-    navigation({ to: "/playlist/$paylistId", params: { paylistId: "1" } })
+    mutate(
+      { name: `My Playlist#${nextPlaylist}`, description: "" },
+      {
+        onSuccess: (data) => {
+          if (data.data?.id) {
+            refetch()
+            navigation({
+              to: "/playlist/$paylistId",
+              params: { paylistId: data.data?.id },
+            })
+          }
+        },
+      }
+    )
   }
+
   return (
     <div>
       <DropdownMenu>
@@ -33,6 +52,7 @@ export const DropdownCreate = () => {
         >
           <DropdownMenuGroup>
             <DropdownMenuItem
+              disabled={isPending}
               onClick={() => createPlaylist()}
               className='focus:bg-[hsla(0,0%,100%,.1)]'
             >

@@ -22,7 +22,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { Tracks } from "@/domain/playlist/getPaylistById"
-import { useGetPlaylistById } from "@/hooks/queries/usePlaylists"
+import {
+  useGetPlaylistById,
+  useGetPlaylists,
+} from "@/hooks/queries/usePlaylists"
 import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 import { formatDuration, timeAgo } from "@/lib/utils"
 import { createFileRoute, useParams } from "@tanstack/react-router"
@@ -42,8 +45,9 @@ export const Route = createFileRoute("/playlist/$paylistId")({
 
 function RouteComponent() {
   const { paylistId } = useParams({ from: "/playlist/$paylistId" })
-  const { data, isLoading } = useGetPlaylistById(paylistId)
+  const { data, isLoading, refetch } = useGetPlaylistById(paylistId)
   const { play, isPlaying, stop, currentTrack } = useAudioPlayer<Tracks>()
+  const playlists = useGetPlaylists()
 
   if (isLoading) {
     return <div>...loading</div>
@@ -81,7 +85,13 @@ function RouteComponent() {
               <DialogHeader>
                 <DialogTitle className='text-white'>Edit details</DialogTitle>
               </DialogHeader>
-              <EditDetails />
+              <EditDetails
+                defaultValues={{ name: data.data.name, description: "" }}
+                edited={() => {
+                  playlists.refetch()
+                  refetch()
+                }}
+              />
             </DialogContent>
           </Dialog>
         </div>
