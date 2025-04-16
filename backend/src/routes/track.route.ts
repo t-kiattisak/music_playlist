@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { Hono } from "hono"
-import { getTracksHandler } from "../services/playlist/track/getTracks"
+import { getTracksHandler } from "../services/track/getTracks"
 
 const trackRoute = new Hono()
 
