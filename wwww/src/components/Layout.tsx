@@ -106,7 +106,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           </div>
           <ScrollArea className='mt-2 overflow-y-auto flex-1'>
             <div className='space-y-1 flex flex-col'>
-              {data?.data.map(({ id, name, user }, index) => (
+              {data?.data.map(({ id, name, user, description }, index) => (
                 <Link
                   key={index}
                   to='/playlist/$paylistId'
@@ -139,7 +139,11 @@ const Layout = ({ children }: PropsWithChildren) => {
                                 </DialogTitle>
                               </DialogHeader>
                               <EditDetails
-                                defaultValues={{ name: name, description: "" }}
+                                playlistId={id}
+                                defaultValues={{
+                                  name: name,
+                                  description: description,
+                                }}
                                 edited={() => refetch()}
                               />
                             </DialogContent>

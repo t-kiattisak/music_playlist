@@ -6,6 +6,7 @@ import { getPlayListsByUserHandler } from "../services/playlist/getPlayListByUse
 import { deletePlaylistHandler } from "../services/playlist/deletePlaylist"
 import { addTrackToPlaylistHandler } from "../services/playlist/addTrackToPlaylist"
 import { removeTrackFromPlaylistHandler } from "../services/playlist/removeTrackFromPlaylist"
+import { updatePlaylistHandler } from "../services/playlist/updatePlaylist"
 
 const playlistRoute = new Hono<{ Variables: { userId: string } }>()
 
@@ -34,6 +35,17 @@ playlistRoute.post("/", async (c) => {
   const userId = c.get("userId")
   return await Effect.runPromise(
     Effect.matchEffect(createPlaylistHandler({ ...input, userId }), {
+      onSuccess: (data) => Effect.succeed(c.json({ data })),
+      onFailure: (err) => Effect.succeed(c.json({ error: err.message }, 400)),
+    })
+  )
+})
+
+playlistRoute.put("/:playlistId", async (c) => {
+  const input = await c.req.json()
+  const playlistId = c.req.param("playlistId")
+  return await Effect.runPromise(
+    Effect.matchEffect(updatePlaylistHandler({ ...input, playlistId }), {
       onSuccess: (data) => Effect.succeed(c.json({ data })),
       onFailure: (err) => Effect.succeed(c.json({ error: err.message }, 400)),
     })

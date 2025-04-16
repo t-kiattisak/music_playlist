@@ -12,6 +12,7 @@ import {
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
+import { useUpdatePlaylist } from "@/hooks/queries/usePlaylists"
 
 const formDetails = z.object({
   name: z.string().min(2).max(50),
@@ -21,8 +22,14 @@ const formDetails = z.object({
 interface EditDetailsProps {
   edited?: VoidFunction
   defaultValues?: z.infer<typeof formDetails>
+  playlistId: string
 }
-export const EditDetails = ({ edited, defaultValues }: EditDetailsProps) => {
+export const EditDetails = ({
+  playlistId,
+  edited,
+  defaultValues,
+}: EditDetailsProps) => {
+  const { mutate } = useUpdatePlaylist()
   const form = useForm({
     resolver: zodResolver(formDetails),
     defaultValues: defaultValues ?? {
@@ -31,8 +38,15 @@ export const EditDetails = ({ edited, defaultValues }: EditDetailsProps) => {
     },
   })
 
-  const onSubmit = () => {
-    edited?.()
+  const onSubmit = (values: z.infer<typeof formDetails>) => {
+    mutate(
+      { playlistId, ...values },
+      {
+        onSuccess: () => {
+          edited?.()
+        },
+      }
+    )
   }
 
   return (

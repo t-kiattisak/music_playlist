@@ -11,7 +11,7 @@ export const createPlaylistHandler = (input: unknown) => {
     Effect.mapError(() => new Error("Invalid playlist input")),
     Effect.flatMap((payload: CreatePlaylistInput) =>
       Effect.tryPromise({
-        try: () => createPlaylist(payload.userId, payload.name),
+        try: () => createPlaylist(payload),
         catch: (e) => new Error("Failed to create playlist: " + String(e)),
       })
     )

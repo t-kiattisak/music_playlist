@@ -7,6 +7,7 @@ export const getTracks = async (search?: string) => {
           OR: [
             { title: { contains: search, mode: "insensitive" } },
             { artist: { contains: search, mode: "insensitive" } },
+            { album: { contains: search, mode: "insensitive" } },
           ],
         }
       : undefined,

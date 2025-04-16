@@ -22,7 +22,7 @@ export const DropdownCreate = ({ nextPlaylist }: { nextPlaylist: number }) => {
 
   const createPlaylist = () => {
     mutate(
-      { name: `My Playlist#${nextPlaylist}`, description: "" },
+      { name: `My Playlist#${nextPlaylist}`, description: "description" },
       {
         onSuccess: (data) => {
           if (data.data?.id) {

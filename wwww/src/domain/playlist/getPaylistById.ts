@@ -5,6 +5,7 @@ export interface GetPlaylistById {
 interface GetPlaylistByIdData {
   id: string
   name: string
+  description: string
   userId: string
   createdAt: string
   tracks: Tracks[]

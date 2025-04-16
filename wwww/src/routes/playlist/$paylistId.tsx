@@ -29,6 +29,7 @@ import {
   useGetPlaylists,
 } from "@/hooks/queries/usePlaylists"
 import { useAudioPlayer } from "@/hooks/useAudioPlayer"
+import { useToggle } from "@/hooks/useToggle"
 import { formatDuration, timeAgo } from "@/lib/utils"
 import { createFileRoute, useParams } from "@tanstack/react-router"
 import {
@@ -50,6 +51,7 @@ function RouteComponent() {
   const { data, isLoading, refetch } = useGetPlaylistById(paylistId)
   const { play, isPlaying, stop, currentTrack } = useAudioPlayer<Tracks>()
   const playlists = useGetPlaylists()
+  const [openDetail, _, setOpenDetail] = useToggle()
 
   const deleteTracks = useDeleteTracks()
 
@@ -71,7 +73,7 @@ function RouteComponent() {
           <div className='w-32 h-32 rounded bg-spotify-gray-mid flex items-center justify-center text-4xl text-white'>
             <Music />
           </div>
-          <Dialog>
+          <Dialog open={openDetail} onOpenChange={setOpenDetail}>
             <DialogTrigger asChild>
               <div>
                 <p className='text-md text-white'>Public Playlist</p>
@@ -89,8 +91,13 @@ function RouteComponent() {
                 <DialogTitle className='text-white'>Edit details</DialogTitle>
               </DialogHeader>
               <EditDetails
-                defaultValues={{ name: data.data.name, description: "" }}
+                playlistId={paylistId}
+                defaultValues={{
+                  name: data.data.name,
+                  description: data.data.description,
+                }}
                 edited={() => {
+                  setOpenDetail(false)
                   playlists.refetch()
                   refetch()
                 }}

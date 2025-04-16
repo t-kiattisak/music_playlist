@@ -5,6 +5,7 @@ import {
   deleteTracks,
   getPlaylistById,
   getPlaylists,
+  updatePlaylist,
 } from "@/services/playlists"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
@@ -23,6 +24,9 @@ export const useGetPlaylistById = (paylistId: string) =>
 
 export const useCreateNewPlaylist = () =>
   useMutation({ mutationFn: createNewPlaylist })
+
+export const useUpdatePlaylist = () =>
+  useMutation({ mutationFn: updatePlaylist })
 
 export const useDeletePlaylistById = () =>
   useMutation({ mutationFn: deletePlaylistId })

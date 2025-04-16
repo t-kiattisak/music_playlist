@@ -7,5 +7,6 @@ interface GetPlaylistData {
   name: string
   userId: string
   createdAt: string
+  description: string
   user: { name: string }
 }

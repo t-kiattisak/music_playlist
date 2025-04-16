@@ -4,6 +4,7 @@ import type {
 } from "@/domain/playlist/createNewPlaylist"
 import type { GetPlaylistById } from "@/domain/playlist/getPaylistById"
 import type { GetPlaylists } from "@/domain/playlist/getPlaylist"
+import type { UpdatePlaylistSchemaInput } from "@/domain/playlist/updatePlaylist"
 import { network } from "@/lib/network"
 
 export const getPlaylists = async () => {
@@ -18,6 +19,17 @@ export const getPlaylistById = async (paylistId: string) => {
 
 export const createNewPlaylist = async (input: CreateNewPlaylistInput) => {
   const { data } = await network.post<CreateNewPlaylist>("/playlists", input)
+  return data
+}
+
+export const updatePlaylist = async ({
+  playlistId,
+  ...input
+}: UpdatePlaylistSchemaInput) => {
+  const { data } = await network.put<CreateNewPlaylist>(
+    `/playlists/${playlistId}`,
+    input
+  )
   return data
 }
 

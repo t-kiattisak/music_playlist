@@ -1,20 +1,23 @@
+import { CreatePlaylistInput } from "../domain/schema/playlist"
+import { UpdatePlaylistInput } from "../domain/schema/updatePlaylist"
 import { prisma } from "../infrastructure/prisma"
 
 // สร้าง playlist ให้ user
-export const createPlaylist = async (userId: string, name: string) => {
-  return prisma.playlist.create({
-    data: {
-      name,
-      userId,
-    },
-  })
+export const createPlaylist = async (data: CreatePlaylistInput) => {
+  return prisma.playlist.create({ data })
 }
 
 // อัพเดท playlist ให้ user
-export const updatePlaylist = async (playlistId: string, name: string) => {
+export const updatePlaylist = async ({
+  playlistId,
+  ...inputs
+}: UpdatePlaylistInput) => {
+  const filteredData = Object.fromEntries(
+    Object.entries(inputs).filter(([_, value]) => value !== undefined)
+  )
   return prisma.playlist.update({
     where: { id: playlistId },
-    data: { name },
+    data: filteredData,
   })
 }
 
