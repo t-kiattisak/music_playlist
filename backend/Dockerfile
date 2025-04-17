@@ -2,8 +2,10 @@ FROM oven/bun
 
 WORKDIR /app
 
+COPY bun.lockb package.json ./
+RUN bun install
+
 COPY . .
 
-RUN bun install
 
 CMD ["bun", "run", "src/index.ts"]
