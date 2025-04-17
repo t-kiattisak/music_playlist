@@ -22,15 +22,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { Tracks } from "@/domain/playlist/getPaylistById"
 import {
   useDeleteTracks,
   useGetPlaylistById,
   useGetPlaylists,
 } from "@/hooks/queries/usePlaylists"
-import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 import { useToggle } from "@/hooks/useToggle"
 import { formatDuration, timeAgo } from "@/lib/utils"
+import { useAudioStore } from "@/stores/useAudioStore"
 import { createFileRoute, useParams } from "@tanstack/react-router"
 import {
   AudioLines,
@@ -49,7 +48,7 @@ export const Route = createFileRoute("/playlist/$paylistId")({
 function RouteComponent() {
   const { paylistId } = useParams({ from: "/playlist/$paylistId" })
   const { data, isLoading, refetch } = useGetPlaylistById(paylistId)
-  const { play, isPlaying, stop, currentTrack } = useAudioPlayer<Tracks>()
+  const { play, isPlaying, stop, currentTrack } = useAudioStore()
   const playlists = useGetPlaylists()
   const [openDetail, _, setOpenDetail] = useToggle()
 
@@ -112,7 +111,7 @@ function RouteComponent() {
           <Table>
             <TableHeader>
               <TableRow className='border-b border-spotify-gray-soft/50 hover:bg-transparent'>
-                <TableHead className=' w-[50px] text-spotify-gray-soft'>
+                <TableHead className=' w-[100px] text-spotify-gray-soft'>
                   #
                 </TableHead>
                 <TableHead className='text-spotify-gray-soft'>Title</TableHead>
@@ -136,7 +135,7 @@ function RouteComponent() {
                     onClick={() =>
                       isPlaying && currentTrack?.track.id === track.track.id
                         ? stop()
-                        : play(track.track.preview, track)
+                        : play(track)
                     }
                   >
                     {isPlaying && currentTrack?.track.id === track.track.id ? (

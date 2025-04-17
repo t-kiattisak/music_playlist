@@ -1,7 +1,14 @@
 import type { PropsWithChildren } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { Bell, CircleMinus, Ellipsis, PenIcon, SearchIcon } from "lucide-react"
+import {
+  AudioLines,
+  Bell,
+  CircleMinus,
+  Ellipsis,
+  PenIcon,
+  SearchIcon,
+} from "lucide-react"
 import { Avatar } from "./ui/avatar"
 import { PlaylistCard } from "./playlist-card"
 
@@ -39,12 +46,15 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
 import { useToggle } from "@/hooks/useToggle"
+import { useAudioStore } from "@/stores/useAudioStore"
 
 const Layout = ({ children }: PropsWithChildren) => {
   const { paylistId } = useParams({ strict: false })
   const { data, refetch } = useGetPlaylists()
   const deletePlaylist = useDeletePlaylistById()
   const [openDetail, _, setOpenDetail] = useToggle()
+  const { currentTrack } = useAudioStore()
+  console.log("currentTrack", currentTrack?.playlistId)
 
   return (
     <div className='bg-black'>
@@ -114,6 +124,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                   key={index}
                   to='/playlist/$paylistId'
                   params={{ paylistId: id }}
+                  className='group'
                 >
                   <PlaylistCard
                     isActive={paylistId === id}
@@ -121,9 +132,18 @@ const Layout = ({ children }: PropsWithChildren) => {
                     owner={user.name}
                   >
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Ellipsis className='text-white ml-auto' />
-                      </DropdownMenuTrigger>
+                      {currentTrack?.playlistId === id ? (
+                        <>
+                          <AudioLines className='ml-auto block group-hover:hidden text-green-500' />
+                          <DropdownMenuTrigger asChild>
+                            <Ellipsis className='text-white ml-auto' />
+                          </DropdownMenuTrigger>
+                        </>
+                      ) : (
+                        <DropdownMenuTrigger asChild>
+                          <Ellipsis className='text-white ml-auto' />
+                        </DropdownMenuTrigger>
+                      )}
                       <DropdownMenuContent className='w-56 shadow-black/40 shadow-lg'>
                         <DropdownMenuGroup>
                           <Dialog
